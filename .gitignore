@@ -1,17 +1,110 @@
-# Object files
-*.o
+//////////Archivo Binario - Ejercicio 13//////////////
+/*/Parte A - Creación de los archivos Empleados.dat y Estudiantes.dat/*/
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#define TAM 30
 
-# Libraries
-*.lib
-*.a
+typedef struct
+{
+	long int dni;
+   char apellido[TAM],nombre[TAM];
+   double sueldo;
+}t_empleado;
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+typedef struct
+{
+	long int dni;
+   char apellido[TAM],nombre[TAM];
+   float promedio;
+}t_alumno;
 
-# Executables
-*.exe
-*.out
-*.app
+/*/Prototipo de funciones/*/
+void CargarDatosEmple(t_empleado *);
+void CargarDatosAlum(t_alumno *);
+///////Programa principal
+
+void main()
+{
+   t_empleado empleado;
+   t_alumno alumno;
+   FILE *pf;
+   int fin=1;
+   //Creación y carga de datos de Empleados.dat
+   printf("\t\t\tDatos de los empleados\n");
+   pf=fopen("Empleados.dat","wb");
+   if(!pf)
+   {
+   	printf("\n Error al abrir el archivo 'Empleados.dat'");
+      exit(0);
+   }
+   while(fin!=0)
+   {
+   	CargarDatosEmple(&empleado);
+   	fwrite(&empleado,sizeof(t_empleado),1,pf);
+      fflush(stdin);
+      printf("\nDesea terminar el ingreso de empleados? Presione cero ");
+      scanf("%d",&fin);
+      fflush(stdin);
+   }
+   fclose(pf);
+   //Creación y carga de datos de Alumnos.dat
+   printf("\n\n\t\t\tDatos de los alumnos\n");
+   pf=fopen("Alumnos.dat","wb");
+   if(!pf)
+   {
+   	printf("\n Error al abrir el archivo 'Alumnos.dat'");
+      exit(0);
+   }
+   fin=1;
+   while(fin!=0)
+   {
+   	CargarDatosAlum(&alumno);
+   	fwrite(&alumno,sizeof(t_alumno),1,pf);
+      fflush(stdin);
+      printf("\nDesea terminar el ingreso de alumnos? Presione cero ");
+      scanf("%d",&fin);
+      fflush(stdin);
+   }
+   fclose(pf);
+	getch();
+}
+
+//////////FUNCIONES///////////
+
+/*/Cargar datos en el registro /*/
+//Empleado
+void CargarDatosEmple(t_empleado *empleado)
+{
+	fflush(stdin);
+	printf("\nNombre del empleado: ");
+   gets(empleado->nombre);
+   fflush(stdin);
+   printf("\nApellido del empleado: ");
+   gets(empleado->apellido);
+   fflush(stdin);
+   printf("\nNumero de DNI: ");
+   scanf("%Ld",&empleado->dni);
+   fflush(stdin);
+   printf("\nIngrese sueldo: ");
+   scanf("%l",&empleado->sueldo);
+   fflush(stdin);
+}
+//Alumno
+void CargarDatosAlum(t_alumno *alumno)
+{
+	fflush(stdin);
+	printf("\nNombre del alumno: ");
+   gets(alumno->nombre);
+   fflush(stdin);
+   printf("\nApellido del alumno: ");
+   gets(alumno->apellido);
+   fflush(stdin);
+   printf("\nNumero de DNI: ");
+   scanf("%Ld",&alumno->dni);
+   fflush(stdin);
+   printf("\nIngrese promedio: ");
+   scanf("%f",&alumno->promedio);
+   fflush(stdin);
+}
+
