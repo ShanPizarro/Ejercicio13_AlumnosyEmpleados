@@ -43,7 +43,7 @@ void main()
    	CargarDatosEmple(&empleado);
    	fwrite(&empleado,sizeof(t_empleado),1,pf);
       fflush(stdin);
-      printf("\nDesea terminar el ingreso de empleados? Presione cero ");
+      printf("\nDesea terminar el ingreso de empleados? Presione cero.Si desea continuar,ingrese 1(uno)");
       scanf("%d",&fin);
       fflush(stdin);
    }
@@ -77,34 +77,38 @@ void main()
 void CargarDatosEmple(t_empleado *empleado)
 {
 	fflush(stdin);
+
 	printf("\nNombre del empleado: ");
-   gets(empleado->nombre);
-   fflush(stdin);
-   printf("\nApellido del empleado: ");
-   gets(empleado->apellido);
-   fflush(stdin);
-   printf("\nNumero de DNI: ");
-   scanf("%Ld",&empleado->dni);
-   fflush(stdin);
-   printf("\nIngrese sueldo: ");
-   scanf("%l",&empleado->sueldo);
-   fflush(stdin);
+   	gets(empleado->nombre);
+
+   	printf("\nApellido del empleado: ");
+   	gets(empleado->apellido);
+
+   	printf("\nNumero de DNI: ");
+   	scanf("%Ld",&empleado->dni);
+
+   	printf("\nIngrese sueldo: ");
+   	scanf("%Lf",&empleado->sueldo);
+
+   	fflush(stdin);
 }
 //Alumno
 void CargarDatosAlum(t_alumno *alumno)
 {
 	fflush(stdin);
+
 	printf("\nNombre del alumno: ");
-   gets(alumno->nombre);
-   fflush(stdin);
-   printf("\nApellido del alumno: ");
-   gets(alumno->apellido);
-   fflush(stdin);
-   printf("\nNumero de DNI: ");
-   scanf("%Ld",&alumno->dni);
-   fflush(stdin);
-   printf("\nIngrese promedio: ");
-   scanf("%f",&alumno->promedio);
-   fflush(stdin);
+   	gets(alumno->nombre);
+
+   	printf("\nApellido del alumno: ");
+   	gets(alumno->apellido);
+
+   	printf("\nNumero de DNI: ");
+   	scanf("%Ld",&alumno->dni);
+
+   	printf("\nIngrese promedio: ");
+   	scanf("%f",&alumno->promedio);
+
+   	fflush(stdin);
 }
 
