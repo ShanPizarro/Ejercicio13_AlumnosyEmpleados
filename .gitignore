@@ -1,5 +1,5 @@
 //////////Archivo Binario - Ejercicio 13//////////////
-/*/Parte A - Creación de los archivos Empleados.dat y Estudiantes.dat/*/
+
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
@@ -22,18 +22,22 @@ typedef struct
 /*/Prototipo de funciones/*/
 void CargarDatosEmple(t_empleado *);
 void CargarDatosAlum(t_alumno *);
+
+//Funcion para la parte B
+void lee_actualiza(FILE *, FILE *);
+
 ///////Programa principal
 
 void main()
 {
    t_empleado empleado;
    t_alumno alumno;
-   FILE *pf;
+   FILE *pfalum, *pfemp;
    int fin=1;
    //Creación y carga de datos de Empleados.dat
    printf("\t\t\tDatos de los empleados\n");
-   pf=fopen("Empleados.dat","wb");
-   if(!pf)
+   pfemp=fopen("Empleados.dat","wb+");
+   if(!pfemp)
    {
    	printf("\n Error al abrir el archivo 'Empleados.dat'");
       exit(0);
@@ -41,17 +45,17 @@ void main()
    while(fin!=0)
    {
    	CargarDatosEmple(&empleado);
-   	fwrite(&empleado,sizeof(t_empleado),1,pf);
+   	fwrite(&empleado,sizeof(t_empleado),1,pfemp);
       fflush(stdin);
       printf("\nDesea terminar el ingreso de empleados? Presione cero.Si desea continuar,ingrese 1(uno)");
       scanf("%d",&fin);
       fflush(stdin);
    }
-   fclose(pf);
+ 
    //Creación y carga de datos de Alumnos.dat
    printf("\n\n\t\t\tDatos de los alumnos\n");
-   pf=fopen("Alumnos.dat","wb");
-   if(!pf)
+   pfalum=fopen("Alumnos.dat","wb+");
+   if(!pfalum)
    {
    	printf("\n Error al abrir el archivo 'Alumnos.dat'");
       exit(0);
@@ -60,13 +64,15 @@ void main()
    while(fin!=0)
    {
    	CargarDatosAlum(&alumno);
-   	fwrite(&alumno,sizeof(t_alumno),1,pf);
+   	fwrite(&alumno,sizeof(t_alumno),1,pfalum);
       fflush(stdin);
       printf("\nDesea terminar el ingreso de alumnos? Presione cero ");
       scanf("%d",&fin);
       fflush(stdin);
    }
-   fclose(pf);
+   lee_actualiza(pfemp,pfalum);
+   fclose(pfemp);
+   fclose(pfalum);
 	getch();
 }
 
@@ -111,4 +117,32 @@ void CargarDatosAlum(t_alumno *alumno)
 
    	fflush(stdin);
 }
+
+//Funcion para leer y actualizar
+void lee_actualiza(FILE * pfemp, FILE * pfalum)
+   {t_empleado emp;
+    t_alumno alum;
+    int flag=0;
+    double sueldo;
+    fseek(pfemp,0,0);           //vuelve al inicio del archivo empleados
+    fseek(pfalum,0,0);          //vuelve al inicio del archivo alumnos
+    fread(&alum,sizeof(t_alumno),1,pfalum); //lee el primer registro del archivo alumnos
+    while(!feof(pfalum))
+    	{if(alum.promedio>7)
+       	{fread(&emp,sizeof(t_empleado),1,pfemp); //si es la 1ra vuelta lee el 1er reg, sino sigue desde donde quedo
+          while(!feof(pfemp)&&(flag==0))
+          	{if((strcmpi(alum.apellido,emp.apellido)==0)&&(strcmpi(alum.nombre,emp.nombre)==0)) //ver si coincide el nombre
+             	{if(alum.dni == emp.dni)  //si es igual, entonces es esa persona
+                  {sueldo= emp.sueldo+(emp.sueldo*0.0728);
+                   emp.sueldo=sueldo;
+                   fwrite(&emp.sueldo,sizeof(t_empleado),1,pfemp)
+                   flag=1;
+                   }
+               }
+             fread(&emp,sizeof(t_empleado),1,pfemp);
+            }
+       flag=0;
+       fread(&alum,sizeof(t_alumno),1,pfalum); //sigue leyendo
+      }
+   }
 
